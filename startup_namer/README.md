@@ -1,6 +1,6 @@
 # startup_namer
 
-編寫你的第一個 Flutter
+A new Flutter project.
 
 ## Getting Started
 
