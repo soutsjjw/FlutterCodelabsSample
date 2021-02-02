@@ -14,15 +14,35 @@
 
 import 'package:flutter/material.dart';
 
+import 'colors.dart';
+import 'supplemental/cut_corners_border.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
   // TODO: Add text editing controllers (101)
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+
+    focusNode = new FocusNode();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +54,11 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
+                Image.asset(
+                  'assets/diamond.png',
+                  fit: BoxFit.contain,
+                  width: 100,
+                ),
                 SizedBox(height: 16.0),
                 Text('SHRINE'),
               ],
@@ -45,12 +69,14 @@ class _LoginPageState extends State<LoginPage> {
             // TODO: Wrap Password with AccentColorOverride (103)
             // TODO: Add TextField widgets (101)
             // [Name]
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                filled: true, // 如果為true，則輸入使用fillColor指定的顏色提供
-                labelText:
-                    'Username', // 用於描述輸入框，例如這個輸入框是用來輸入用戶名還是密碼的，當輸入框獲取焦點時默認會浮動到上方
+            AccentColorOverride(
+              color: kShrineBrown900,
+              child: TextField(
+                focusNode: focusNode,
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                ),
               ),
             ),
             // spacer
@@ -58,13 +84,15 @@ class _LoginPageState extends State<LoginPage> {
               height: 12.0,
             ),
             // [Password]
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                filled: true,
-                labelText: 'Password',
+            AccentColorOverride(
+              color: kShrineBrown900,
+              child: TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+                obscureText: true, // 是否是密碼
               ),
-              obscureText: true, // 是否是密碼
             ),
             // TODO: Add button bar (101)
             ButtonBar(
@@ -76,8 +104,15 @@ class _LoginPageState extends State<LoginPage> {
                     // TODO: Clear the text fields (101)
                     _usernameController.clear();
                     _passwordController.clear();
+
+                    focusNode.requestFocus();
                   },
                   child: Text('CANCEL'),
+                  style: TextButton.styleFrom(
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                    ),
+                  ),
                 ),
                 // TODO: Show the next page (101)
                 ElevatedButton(
@@ -85,6 +120,12 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pop(context);
                   },
                   child: Text('NEXT'),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 8,
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -96,3 +137,29 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 // TODO: Add AccentColorOverride (103)
+class AccentColorOverride extends StatelessWidget {
+  const AccentColorOverride({Key key, this.color, this.child})
+      : super(key: key);
+
+  final Color color;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    TextField textField = TextField(
+      focusNode: (child as TextField).focusNode,
+      controller: (child as TextField).controller,
+      decoration: (child as TextField).decoration.copyWith(
+        labelStyle: TextStyle(color: color),
+      ),
+    );
+
+    return Theme(
+      child: textField,
+      data: Theme.of(context).copyWith(
+        accentColor: color,
+        backgroundColor: color,
+      ),
+    );
+  }
+}

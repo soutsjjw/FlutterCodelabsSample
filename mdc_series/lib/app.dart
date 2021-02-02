@@ -14,12 +14,13 @@
 
 import 'package:flutter/material.dart';
 
+import 'colors.dart';
 import 'home.dart';
 import 'login.dart';
+import 'supplemental/cut_corners_border.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +32,7 @@ class ShrineApp extends StatelessWidget {
       // TODO: Change backLayer field value to CategoryMenuPage (104)
       initialRoute: '/login',
       onGenerateRoute: _getRoute,
-      // TODO: Add a theme (103)
+      theme: _kShrineTheme,
     );
   }
 
@@ -49,4 +50,65 @@ class ShrineApp extends StatelessWidget {
 }
 
 // TODO: Build a Shrine Theme (103)
+final ThemeData _kShrineTheme = _buildShrineTheme();
+
+ThemeData _buildShrineTheme() {
+  final ThemeData base = ThemeData.light();
+  return base.copyWith(
+    primaryColor: kShrinePink100,
+    accentColor: kShrineBrown900,
+    buttonColor: kShrinePink100,
+    scaffoldBackgroundColor: kShrineBackgroundWhite,
+    cardColor: kShrineBackgroundWhite,
+    textSelectionTheme: TextSelectionThemeData(
+      selectionColor: kShrinePink100,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        onPrimary: kShrineBrown900,
+        primary: kShrinePink400,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(primary: kShrineBrown900),
+    ),
+    errorColor: kShrineErrorRed,
+    // TODO: Add the text themes (103)
+    textTheme: _buildShrineTextTheme(base.textTheme),
+    // TODO: Add the icon themes (103)
+    primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
+    // TODO: Decorate the inputs (103)
+    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+    // TODO: Add the icon theme (103)
+    primaryIconTheme: base.iconTheme.copyWith(
+        color: kShrineBrown900
+    ),
+    // TODO: Decorate the inputs (103)
+    inputDecorationTheme: InputDecorationTheme(
+      border: CutCornersBorder(),
+      focusedBorder: CutCornersBorder(
+          borderSide: BorderSide(color: kShrineBrown900)
+      ),
+    ),
+  );
+}
+
 // TODO: Build a Shrine Text Theme (103)
+TextTheme _buildShrineTextTheme(TextTheme base) {
+  return base.copyWith(
+    headline5: base.headline5.copyWith(
+      fontWeight: FontWeight.w500
+    ),
+    subtitle1: base.subtitle1.copyWith(
+      fontSize: 18.0
+    ),
+    caption: base.caption.copyWith(
+      fontWeight: FontWeight.w400,
+      fontSize: 14.0
+    ),
+  ).apply(
+    fontFamily: 'Rubik',
+    displayColor: kShrineBrown900,
+    bodyColor: kShrineBrown900,
+  );
+}
